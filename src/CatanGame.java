@@ -21,6 +21,8 @@ public class CatanGame {
 		
 	//	System.out.println("How big should the board be? (Recommended 5 for 3-4 players, 7 for 5-6)");
 		//	board = new CatanBoard(in.nextInt());
+		if(play < 3)
+			board = new CatanBoard(4);
 		if(play < 5)
 			board = new CatanBoard(5);
 		else if(play < 7)
@@ -62,10 +64,11 @@ public class CatanGame {
 	}
 	public void drawPlayers()
 	{
+		int b = board.getLength()%2 == 0 ? board.getLength() + 1: board.getLength();
 		Zen.setColor(Color.white);
 		String[] r = new String[]{"brick","sheep","stone","wheat","wood", "vp"};
 		for(int x = 0; x < 6; x++)
-		Zen.drawText(r[x], 75*(board.getLength() + 2) + 30, 150 + 50*x);
+		Zen.drawText(r[x], 75*(b + 2) + 30, 150 + 50*x);
 		for(int i = 0; i < players.length; i++)
 		{
 			players[i].draw();

@@ -252,20 +252,21 @@ public class Player {
 	}
 	public void draw()
 	{
+		int b = boardLength%2 == 0 ? boardLength+1 : boardLength;
 		Zen.setColor(color);
-		Zen.drawText(getName(), 75*(number + boardLength + 3), 100);
+		Zen.drawText(getName(), 75*(number + b + 3), 100);
 		for(int i = 0; i < 5; i++)
 		{
 			Zen.setColor(Color.black);
-			Zen.drawText("" + oldResources[i], 75*(number + boardLength + 3) + 30, 150 + 50*i);
+			Zen.drawText("" + oldResources[i], 75*(number + b + 3) + 30, 150 + 50*i);
 			Zen.setColor(color);
-			Zen.drawText("" + resources[i], 75*(number + boardLength + 3) + 30, 150 + 50*i);
+			Zen.drawText("" + resources[i], 75*(number + b + 3) + 30, 150 + 50*i);
 			oldResources[i] = resources[i];
 		}
 		Zen.setColor(Color.black);
-		Zen.drawText("" + oldResources[5], 75*(number + boardLength + 3) + 30, 150 + 250);
+		Zen.drawText("" + oldResources[5], 75*(number + b + 3) + 30, 150 + 250);
 		Zen.setColor(color);
-		Zen.drawText("" + vp, 75*(number + boardLength + 3) + 30, 150 + 250);
+		Zen.drawText("" + vp, 75*(number + b + 3) + 30, 150 + 250);
 		oldResources[5] = vp;
 		
 	}

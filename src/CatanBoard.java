@@ -4,7 +4,9 @@ public class CatanBoard {
 	CatanHex[][] tiles;
 	CatanHex robberLocation;
 	public CatanBoard(int size) //Determines the board size and makes the tiles in that class
-	{
+	{	if(size%2 == 0)
+		tiles = new CatanHex[size+1][];
+	else
 		tiles = new CatanHex[size][];
 		for(int i = 0; i < tiles.length; i++)
 		{
@@ -23,7 +25,7 @@ public class CatanBoard {
 			for(int j = 0; j < tiles[i].length; j++)
 				tiles[i][j].draw(i,j, tiles[tiles.length/2].length - tiles[i].length);	
 		}
-		robberLocation.drawRobber(Color.white, tiles.length - tiles[robberLocation.getPosition()[0]].length);
+		robberLocation.drawRobber(Color.white, tiles[tiles.length/2].length - tiles[robberLocation.getPosition()[0]].length);
 	}
 	public void giveResources(int x)
 	{
