@@ -3,10 +3,12 @@ import java.awt.Color;
 public class Road {
 	private Player owner;
 	private Color color;
-	public Road()
+	private int[] position;
+	public Road(int x, int y, int s)
 	{
 		owner = null;
 		color = Color.white;
+		position = new int[]{x,y,s};
 	}
 	public Player getOwner()
 	{
@@ -24,6 +26,10 @@ public class Road {
 	public Color getColor()
 	{
 		return color;
+	}
+	public int[] getPosition()
+	{
+		return position;
 	}
 
 }

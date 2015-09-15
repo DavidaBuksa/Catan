@@ -80,7 +80,7 @@ import javax.swing.SwingUtilities;
 @SuppressWarnings("serial")
 public class Zen extends JApplet {
 
-	public static final Dimension DEFAULT_SIZE = new Dimension(800, 700);
+	public static final Dimension DEFAULT_SIZE = new Dimension(1200, 700);
 	public static final String DEFAULT_OPTIONS = "";
 	protected static final boolean VERBOSE = false;
 
