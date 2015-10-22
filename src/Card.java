@@ -70,6 +70,8 @@ public class Card {
 		{
 			game.getBoard().buildRoad(p);
 			game.getBoard().buildRoad(p);
+			p.setRoad(game.longRoad(p));
+			game.longestRoad();
 		}
 		if(card == 4)
 		{

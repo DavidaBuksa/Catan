@@ -23,7 +23,7 @@ public class CatanGame {
 		//	board = new CatanBoard(in.nextInt());
 		if(play < 3)
 			board = new CatanBoard(4);
-		if(play < 5)
+		else if(play < 5)
 			board = new CatanBoard(5);
 		else if(play < 7)
 			board = new CatanBoard(6);
@@ -276,6 +276,8 @@ public class CatanGame {
 				if(board.buildRoad(p))
 				{
 					p.builtRoad();
+					p.setRoad(longRoad(p));
+					longestRoad();
 				}
 		}
 			
@@ -377,7 +379,7 @@ public class CatanGame {
 	}
 	public void checkKnights()
 	{
-		int max = 0;
+		int max = 2;
 		int j = -1;
 		for(int i = 0; i < players.length; i++)
 		{
@@ -392,8 +394,32 @@ public class CatanGame {
 				j = -1;
 				}
 		}
-		if(j != -1 && max >=3)
+		if(j != -1)
 			players[j].hasKnights(true);
+	}
+	public int longRoad(Player p)
+	{
+		return board.longRoad(p);
+	}
+	public void longestRoad()
+	{
+		int max = 10;
+		int j = -1;
+		for(int i = 0; i < players.length; i++)
+		{
+			players[i].longestRoad(false);
+			if(players[i].getRoad() > max)
+				{
+				max = players[i].getRoad();
+				j = i;
+				}
+			else if(players[i].getRoad() == max)
+				{
+				j = -1;
+				}
+		}
+		if(j != -1)
+			players[j].longestRoad(true);
 	}
 	public CatanBoard getBoard()
 	{

@@ -12,6 +12,8 @@ public class Player {
 	private ArrayList<Card> cards = new ArrayList<Card>();
 	private String name;
 	private int vp;
+	private int longRoad;
+	private boolean longestRoad;
 	public Player(int b, int x)
 	{
 		boardLength = b;
@@ -295,9 +297,30 @@ public class Player {
 	{
 		return hasKnights;
 	}
+	public int getRoad()
+	{
+		return longRoad;
+	}
+	public void setRoad(int r)
+	{
+		longRoad = r;
+		System.out.println(getName() + "'s longest road is " + r);
+	}
+	public void longestRoad(boolean b)
+	{
+		longestRoad = b;
+	}
+	public boolean longestRoad()
+	{
+		return longestRoad;
+	}
 	public int getVP()
 	{
+		if(hasKnights && longestRoad)
+			return vp+4;
 		if(hasKnights)
+			return vp+2;
+		if(longestRoad)
 			return vp+2;
 		return vp;
 	}

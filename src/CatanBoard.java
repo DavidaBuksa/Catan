@@ -177,13 +177,13 @@ public class CatanBoard {
 	}
 	public ArrayList<Player> moveRobber(Player p)
 	{
-		robberLocation.drawRobber(Color.black, tiles.length - tiles[robberLocation.getPosition()[0]].length);
+		robberLocation.drawRobber(Color.black, tiles[tiles.length/2].length - tiles[robberLocation.getPosition()[0]].length);
 		System.out.println(p.getName() + " must move the robber.");
 		CatanHex rob = selectAHex(p);
 		while(rob == robberLocation)
 			rob = selectAHex(p);
 		robberLocation = rob;
-		robberLocation.drawRobber(Color.white, tiles.length - tiles[robberLocation.getPosition()[0]].length);
+		robberLocation.drawRobber(Color.white, tiles[tiles.length/2].length - tiles[robberLocation.getPosition()[0]].length);
 		
 		ArrayList<Player> ans = new ArrayList<Player>();
 		for(int i = 0; i < 6; i++)
@@ -502,6 +502,51 @@ public class CatanBoard {
 		if(tiles[r.getPosition()[0]][r.getPosition()[1]].getRoad((r.getPosition()[2]+5)%6).getOwner() == p)
 			return true;
 		return false;
+	}
+	public int longRoad(Player p)
+	{
+		int max = 0;
+		for(int i = 0; i < tiles.length; i++)
+		{
+			for(int j = 0; j < tiles[i].length; j++)
+			{
+				for(int k = 0; k < 6; k++)
+				{
+					if(longestRoad(tiles[i][j].getRoad((k+1)%6), tiles[i][j].getRoad(k), 0, p, new ArrayList<Road>()) > max)
+						max = longestRoad(tiles[i][j].getRoad((k+1)%6), tiles[i][j].getRoad(k), 0, p, new ArrayList<Road>());
+				}
+			}
+		}
+		return max;
+	}
+	public int longestRoad(Road r0, Road r1, int count, Player p, ArrayList<Road> arr)
+	{
+		int x1 = count;
+		int x2 = count;
+		
+		Road r2 = getRoad3(new int[]{r1.getPosition()[0],r1.getPosition()[1],r1.getPosition()[2]});
+		if(arr.indexOf(r1) != -1 || arr.indexOf(r2) != -1)
+			return count;
+		arr.add(r1);
+		arr.add(r2);
+		if(r0.getPosition()[2] > r1.getPosition()[2] || r0.getPosition()[2] == 0 && r1.getPosition()[2] == 5)
+		{	
+			if(tiles[r1.getPosition()[0]][r1.getPosition()[1]].getRoad((r1.getPosition()[2]+5)%6).getOwner() == p)
+				x1 = longestRoad(r1, tiles[r1.getPosition()[0]][r1.getPosition()[1]].getRoad((r1.getPosition()[2]+5)%6), count+1, p, arr);
+			
+			if(r2 != null && tiles[r2.getPosition()[0]][r2.getPosition()[1]].getRoad((r2.getPosition()[2]+1)%6).getOwner() == p)
+				x2 = longestRoad(r2, tiles[r2.getPosition()[0]][r2.getPosition()[1]].getRoad((r2.getPosition()[2]+1)%6), count+1, p, arr);
+		}
+		else if(r0.getPosition()[2] < r1.getPosition()[2]|| r1.getPosition()[2] == 0 && r0.getPosition()[2] == 5)
+		{	
+			if(tiles[r1.getPosition()[0]][r1.getPosition()[1]].getRoad((r1.getPosition()[2]+1)%6).getOwner() == p)
+				x1 = longestRoad(r1, tiles[r1.getPosition()[0]][r1.getPosition()[1]].getRoad((r1.getPosition()[2]+1)%6), count+1, p, arr);
+			
+			if(r2 != null && tiles[r2.getPosition()[0]][r2.getPosition()[1]].getRoad((r2.getPosition()[2]+5)%6).getOwner() == p)
+				x2 = longestRoad(r2, tiles[r2.getPosition()[0]][r2.getPosition()[1]].getRoad((r2.getPosition()[2]+5)%6), count+1, p, arr);
+		}
+		return x1 > x2 ? x1 : x2;
+			
 	}
 	public int getLength()
 	{
