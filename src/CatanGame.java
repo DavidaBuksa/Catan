@@ -2,15 +2,16 @@ import java.util.*;
 import java.awt.Color;
 public class CatanGame {
 	private static Scanner in = new Scanner(System.in);
-	private Player[] players;
-	private CatanBoard board;
-	private ArrayList<String> cols = new ArrayList<String>();
-	private Deck deck = new Deck(this);
-	Color[] colors = new Color[]{Color.orange, Color.red, Color.blue, Color.green, Color.pink, Color.magenta, Color.yellow, Color.cyan};
+	private static Player[] players;
+	private static ArrayList<String> cols = new ArrayList<String>();
+	private static Deck deck = new Deck();
+	private static Color[] colors = new Color[]{Color.orange, Color.red, Color.blue, Color.green, 
+			Color.pink, Color.magenta, Color.yellow, Color.cyan};
 	
-	public CatanGame() // Sets up the board and players, in their respective classes
+	public static void init() // Sets up the board and players, in their respective classes
 	{
-		cols.add("orange");cols.add("red");cols.add("blue");cols.add("green");cols.add("pink");cols.add("magenta");cols.add("yellow");cols.add("cyan");
+		cols.add("orange");cols.add("red");cols.add("blue");cols.add("green");
+		cols.add("pink");cols.add("magenta");cols.add("yellow");cols.add("cyan");
 		int play = -1;
 		while(play < 0 || play > 8)
 		{
@@ -18,40 +19,37 @@ public class CatanGame {
 			play = in.nextInt();
 		}
 		players = new Player[play];
-		
-	//	System.out.println("How big should the board be? (Recommended 5 for 3-4 players, 7 for 5-6)");
-		//	board = new CatanBoard(in.nextInt());
 		if(play < 3)
-			board = new CatanBoard(4);
+			CatanBoard.initialize(4);
 		else if(play < 5)
-			board = new CatanBoard(5);
+			CatanBoard.initialize(5);
 		else if(play < 7)
-			board = new CatanBoard(6);
+			CatanBoard.initialize(6);
 		else
-			board = new CatanBoard(7);
+			CatanBoard.initialize(7);
 	
 		for(int i = 0; i < players.length; i++)
 		{
-			players[i] = new Player(board.getLength(), i);
+			players[i] = new Player(i);
 			setColor(players[i]);
 		}
-		board.draw();
+		CatanBoard.drawInit();
 		drawPlayers();
 		
 	}
-	public void play() 
+	public static void play() 
 	{
 		for(int i = 0; i < players.length; i++)
 		{
-			board.buildInitialSettlement(players[i]);
+			CatanBoard.buildInitialSettlement(players[i]);
 		}
 		for(int j = 0; j < players.length; j++)
 		{
-			board.buildInitialSettlement(players[players.length-j-1]);
+			CatanBoard.buildInitialSettlement(players[players.length-j-1]);
 		}
 		for(int x = 2; x < 13; x++)
 			if(x != 7)
-				board.giveResources(x);
+				CatanBoard.giveResources(x);
 		while(checkVictory() == null)
 		{
 			for(int i = 0; i < players.length; i++)
@@ -62,9 +60,9 @@ public class CatanGame {
 			
 		}
 	}
-	public void drawPlayers()
+	public static void drawPlayers()
 	{
-		int b = board.getLength()%2 == 0 ? board.getLength() + 1: board.getLength();
+		int b = CatanBoard.getLength()%2 == 0 ? CatanBoard.getLength() + 1: CatanBoard.getLength();
 		Zen.setColor(Color.white);
 		String[] r = new String[]{"brick","sheep","stone","wheat","wood", "vp"};
 		for(int x = 0; x < 6; x++)
@@ -74,7 +72,7 @@ public class CatanGame {
 			players[i].draw();
 		}
 	}
-	public void setColor(Player p)
+	public static void setColor(Player p)
 	{
 		String s = "";
 		
@@ -88,7 +86,7 @@ public class CatanGame {
 		cols.set(cols.indexOf(s), "taken");
 		
 	}
-	public Player checkVictory()
+	public static Player checkVictory()
 	{
 		Player winner = null;
 		for(Player p : players)
@@ -103,27 +101,27 @@ public class CatanGame {
 		}
 		return winner;
 	}
-	public void startTurn(Player p)
+	public static void startTurn(Player p)
 	{
 		int x = (int)(Math.random()*6) + (int)(Math.random()*6) + 2;
 		System.out.println(x + " was rolled.");
 		if(x != 7)
-		board.giveResources(x);
+			CatanBoard.giveResources(x);
 		else
 		{
-			stealFrom(p, board.moveRobber(p));
+			stealFrom(p, CatanBoard.moveRobber(p));
 			for(Player c : players)
 				c.robbed();
 			
 		}
 	}
-	public int selectAResource()
+	public static int selectAResource()
 	{
 		String[] r = new String[]{"brick","sheep","stone","wheat","wood"};
 		Zen.setColor(Color.white);
 		for(int i = 0; i < 5; i++)
 		{
-			Zen.drawText(r[i], 75*(i+2), board.getLength()*88+50);
+			Zen.drawText(r[i], 75*(i+2), CatanBoard.getLength()*88+50);
 		}
 		int x = 0;
 		int y = 0;
@@ -132,15 +130,15 @@ public class CatanGame {
 			Zen.waitForClick();
 			x = Zen.getMouseClickX();
 			y = Zen.getMouseClickY();
-		}while(selectMove(x,y) == -1);
+		}while(selectMove(x,y) == -1 || selectMove(x,y) >= 5);
 		Zen.setColor(Color.black);
 		for(int i = 0; i < 5; i++)
 		{
-			Zen.drawText(r[i], 75*(i+2), board.getLength()*88+50);
+			Zen.drawText(r[i], 75*(i+2), CatanBoard.getLength()*88+50);
 		}
 		return selectMove(x,y);
 	}
-	public Player selectAPlayer()
+	public static Player selectAPlayer()
 	{
 		int x = 0;
 		int y = 0;
@@ -152,17 +150,41 @@ public class CatanGame {
 		}while(selectedPlayer(x,y) == -1);
 		return players[selectedPlayer(x,y)];
 	}
-	public int selectedPlayer(int x, int y)
+	public static int selectAResourceFreely()
+	{
+		String[] r = new String[]{"brick","sheep","stone","wheat","wood", "cancel"};
+		Zen.setColor(Color.white);
+		for(int i = 0; i < 6; i++)
+		{
+			Zen.drawText(r[i], 75*(i+2), CatanBoard.getLength()*88+50);
+		}
+		int x = 0;
+		int y = 0;
+		do
+		{
+			Zen.waitForClick();
+			x = Zen.getMouseClickX();
+			y = Zen.getMouseClickY();
+		}while(selectMove(x,y) == -1);
+		Zen.setColor(Color.black);
+		for(int i = 0; i < 6; i++)
+		{
+			Zen.drawText(r[i], 75*(i+2), CatanBoard.getLength()*88+50);
+		}
+		return selectMove(x,y);
+	}
+	
+	public static int selectedPlayer(int x, int y)
 	{
 			if(y < 100 || y > 140)
 				return -1;
-			if(x%75 > 50 || x < 75*(board.getLength() + 3) || x > 75*(board.getLength() + 3 + players.length))
+			if(x%75 > 50 || x < 75*(CatanBoard.getLength() + 3) || x > 75*(CatanBoard.getLength() + 3 + players.length))
 				return -1;
 	
-		return (x/75 - board.getLength() - 3);
+		return (x/75 - CatanBoard.getLength() - 3);
 	}
 
-	public void stealFrom(Player p, ArrayList<Player> arr)
+	public static void stealFrom(Player p, ArrayList<Player> arr)
 	{	boolean has = false;
 	for(Player c: arr)
 		if(c.getTotalResources() > 0)
@@ -184,14 +206,14 @@ public class CatanGame {
 				
 			}
 	}
-	public void runTurn(Player p)
+	public static void runTurn(Player p)
 	{
 		System.out.println(p.getName() + " must select an action.");
 		String[] r = new String[]{"Build","Trade","Card","End Turn"};
 		Zen.setColor(Color.white);
 		for(int i = 0; i < 4; i++)
 		{
-			Zen.drawText(r[i], 75*(i+2), board.getLength()*88+50);
+			Zen.drawText(r[i], 75*(i+2), CatanBoard.getLength()*88+50);
 		}
 		int x = 0;
 		int y = 0;
@@ -200,11 +222,11 @@ public class CatanGame {
 			Zen.waitForClick();
 			x = Zen.getMouseClickX();
 			y = Zen.getMouseClickY();
-		}while(selectMove(x,y) == -1 || selectMove(x,y) == 4);
+		}while(selectMove(x,y) == -1 || selectMove(x,y) >= 4);
 		Zen.setColor(Color.black);
 		for(int i = 0; i < 4; i++)
 		{
-			Zen.drawText(r[i], 75*(i+2), board.getLength()*88+50);
+			Zen.drawText(r[i], 75*(i+2), CatanBoard.getLength()*88+50);
 		}
 		if(selectMove(x,y) == 0)
 		{
@@ -227,26 +249,26 @@ public class CatanGame {
 		Zen.setColor(Color.black);
 		for(int i = 0; i < 4; i++)
 		{
-			Zen.drawText(r[i], 75*(i+2), board.getLength()*88+50);
+			Zen.drawText(r[i], 75*(i+2), CatanBoard.getLength()*88+50);
 		}
 	}
-	public int selectMove(int x, int y)
+	public static int selectMove(int x, int y)
 	{
-		if(y < board.getLength()*88+30 || y > board.getLength()*88+70)
+		if(y < CatanBoard.getLength()*88+30 || y > CatanBoard.getLength()*88+70)
 			return -1;
-		if(x%75 > 50 || x < 150 || x > 500)
+		if(x%75 > 50 || x < 150 || x > 575)
 			return -1;
 		return (x-150)/75;
 	}
 	
-	public void build(Player p)
+	public static void build(Player p)
 	{
 		System.out.println(p.getName() + " must select a building.");
 		String[] r = new String[]{"Settle","Road","City","Card", "Cancel"};
 		Zen.setColor(Color.white);
 		for(int i = 0; i < 5; i++)
 		{
-			Zen.drawText(r[i], 75*(i+2), board.getLength()*88+50);
+			Zen.drawText(r[i], 75*(i+2), CatanBoard.getLength()*88+50);
 		}
 		int x = 0;
 		int y = 0;
@@ -259,12 +281,12 @@ public class CatanGame {
 		Zen.setColor(Color.black);
 		for(int i = 0; i < 5; i++)
 		{
-			Zen.drawText(r[i], 75*(i+2), board.getLength()*88+50);
+			Zen.drawText(r[i], 75*(i+2), CatanBoard.getLength()*88+50);
 		}
 		if(selectMove(x,y) == 0)
 		{
 			if(p.canBuildSettlement())
-				if(board.buildSettlement(p))
+				if(CatanBoard.buildSettlement(p))
 				{
 					p.builtSettle();
 				}
@@ -273,7 +295,7 @@ public class CatanGame {
 		if(selectMove(x,y) == 1)
 		{
 			if(p.canBuildRoad())
-				if(board.buildRoad(p))
+				if(CatanBoard.buildRoad(p))
 				{
 					p.builtRoad();
 					p.setRoad(longRoad(p));
@@ -284,7 +306,7 @@ public class CatanGame {
 		if(selectMove(x,y) == 2)
 		{
 			if(p.canBuildCity())
-				if(board.buildCity(p))
+				if(CatanBoard.buildCity(p))
 				{
 					p.builtCity();
 				}
@@ -299,21 +321,21 @@ public class CatanGame {
 		}
 	}
 	
-	public boolean buildCard(Player p)
+	public static boolean buildCard(Player p)
 	{
 		if(deck.size() == 0 || p.getCards().size() > 4)
 			return false;
 		p.addCard(deck.getCard(0));
 		return true;
 	}
-	public void trade(Player p)
+	public static void trade(Player p)
 	{
 		System.out.println(p.getName() + " must choose how to trade.");
 		String[] r = new String[]{"Give","Receive","4-for-1","", "Cancel"};
 		Zen.setColor(Color.white);
 		for(int i = 0; i < 5; i++)
 		{
-			Zen.drawText(r[i], 75*(i+2), board.getLength()*88+50);
+			Zen.drawText(r[i], 75*(i+2), CatanBoard.getLength()*88+50);
 		}
 		int x = 0;
 		int y = 0;
@@ -322,15 +344,15 @@ public class CatanGame {
 			Zen.waitForClick();
 			x = Zen.getMouseClickX();
 			y = Zen.getMouseClickY();
-		}while(selectMove(x,y) == -1 || selectMove(x,y) == 3);
+		}while(selectMove(x,y) == -1);
 		Zen.setColor(Color.black);
 		for(int i = 0; i < 5; i++)
 		{
-			Zen.drawText(r[i], 75*(i+2), board.getLength()*88+50);
+			Zen.drawText(r[i], 75*(i+2), CatanBoard.getLength()*88+50);
 		}
 		if(selectMove(x,y) == 2)
 			p.tradeWithBank();
-		else
+		else if(selectMove(x,y) < 2)
 		{
 			Player tr = null;
 		System.out.println(p.getName() + " must select a player to trade with.");
@@ -347,7 +369,7 @@ public class CatanGame {
 		}
 		
 	}
-	public void card(Player p)
+	public static void card(Player p)
 	{
 		if(p.getCards().size() == 0)
 			return;
@@ -355,7 +377,7 @@ public class CatanGame {
 		Zen.setColor(Color.white);
 		for(int i = 0; i < p.getCards().size(); i++)
 		{
-			Zen.drawText(p.getCards().get(i).getName(), 75*(i+2), board.getLength()*88+50);
+			Zen.drawText(p.getCards().get(i).getName(), 75*(i+2), CatanBoard.getLength()*88+50);
 		}
 		int x = 0;
 		int y = 0;
@@ -364,11 +386,11 @@ public class CatanGame {
 			Zen.waitForClick();
 			x = Zen.getMouseClickX();
 			y = Zen.getMouseClickY();
-		}while(selectMove(x,y) < p.getCards().size() && selectMove(x,y) != 4);
+		}while(selectMove(x,y) == -1 || selectMove(x,y) >= 4);
 		Zen.setColor(Color.black);
 		for(int i = 0; i < p.getCards().size(); i++)
 		{
-			Zen.drawText(p.getCards().get(i).getName(), 75*(i+2), board.getLength()*88+50);
+			Zen.drawText(p.getCards().get(i).getName(), 75*(i+2), CatanBoard.getLength()*88+50);
 		}
 		if(selectMove(x,y) != 4)
 		{
@@ -377,7 +399,7 @@ public class CatanGame {
 		}
 		
 	}
-	public void checkKnights()
+	public static void checkKnights()
 	{
 		int max = 2;
 		int j = -1;
@@ -397,13 +419,13 @@ public class CatanGame {
 		if(j != -1)
 			players[j].hasKnights(true);
 	}
-	public int longRoad(Player p)
+	public static int longRoad(Player p)
 	{
-		return board.longRoad(p);
+		return CatanBoard.longRoad(p);
 	}
-	public void longestRoad()
+	public static void longestRoad()
 	{
-		int max = 10;
+		int max = 4;
 		int j = -1;
 		for(int i = 0; i < players.length; i++)
 		{
@@ -421,11 +443,7 @@ public class CatanGame {
 		if(j != -1)
 			players[j].longestRoad(true);
 	}
-	public CatanBoard getBoard()
-	{
-		return board;
-	}
-	public Player[] getPlayers()
+	public static Player[] getPlayers()
 	{
 		return players;
 	}

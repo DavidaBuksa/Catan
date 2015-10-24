@@ -3,7 +3,6 @@ import java.awt.Color;
 public class Player {
 	public static Scanner in = new Scanner(System.in);
 	private Color color;
-	private int boardLength;
 	private int[] resources = new int[5];
 	private int[] oldResources = new int[6];
 	private int number;
@@ -14,9 +13,8 @@ public class Player {
 	private int vp;
 	private int longRoad;
 	private boolean longestRoad;
-	public Player(int b, int x)
+	public Player(int x)
 	{
-		boardLength = b;
 		number = x;
 		System.out.println("What is this player's name?");
 		name = in.nextLine();
@@ -47,7 +45,7 @@ public class Player {
 	{
 		System.out.println(name + " must lose a resource card.");
 
-			int x = selectAResource();
+			int x = CatanGame.selectAResource();
 			if(resources[x] > 0)
 			{
 				resources[x]--;
@@ -56,68 +54,8 @@ public class Player {
 			else
 				loseResource();
 	}
-	public int selectAResource()
-	{
-		String[] r = new String[]{"brick","sheep","stone","wheat","wood"};
-		Zen.setColor(Color.white);
-		for(int i = 0; i < 5; i++)
-		{
-			Zen.drawText(r[i], 75*(i+2), boardLength*88+50);
-		}
-		int x = 0;
-		int y = 0;
-		do
-		{
-			Zen.waitForClick();
-			x = Zen.getMouseClickX();
-			y = Zen.getMouseClickY();
-		}while(resourceLocation(x,y) == -1);
-		Zen.setColor(Color.black);
-		for(int i = 0; i < 5; i++)
-		{
-			Zen.drawText(r[i], 75*(i+2), boardLength*88+50);
-		}
-		return resourceLocation(x,y);
-	}
-	public int resourceLocation(int x, int y)
-	{
-		if(y < boardLength*88+30 || y > boardLength*88+70)
-			return -1;
-		if(x%75 > 50 || x < 150 || x > 500)
-			return -1;
-		return (x-150)/75;
-	}
-	public int selectAResourceFreely()
-	{
-		String[] r = new String[]{"brick","sheep","stone","wheat","wood", "cancel"};
-		Zen.setColor(Color.white);
-		for(int i = 0; i < 6; i++)
-		{
-			Zen.drawText(r[i], 75*(i+2), boardLength*88+50);
-		}
-		int x = 0;
-		int y = 0;
-		do
-		{
-			Zen.waitForClick();
-			x = Zen.getMouseClickX();
-			y = Zen.getMouseClickY();
-		}while(resourceLocation6(x,y) == -1);
-		Zen.setColor(Color.black);
-		for(int i = 0; i < 6; i++)
-		{
-			Zen.drawText(r[i], 75*(i+2), boardLength*88+50);
-		}
-		return resourceLocation6(x,y);
-	}
-	public int resourceLocation6(int x, int y)
-	{
-		if(y < boardLength*88+30 || y > boardLength*88+70)
-			return -1;
-		if(x%75 > 50 || x < 150 || x > 575)
-			return -1;
-		return (x-150)/75;
-	}
+	
+	
 	
 	public void loseResource(int x)
 	{
@@ -163,7 +101,7 @@ public class Player {
 	public void trade(Player p)
 	{
 		System.out.println(name + " must choose a resource card to give.");
-		int x = selectAResourceFreely();
+		int x = CatanGame.selectAResourceFreely();
 		if(x != 5 && resources[x] > 0)
 		{
 			loseResource(x);
@@ -175,11 +113,11 @@ public class Player {
 	public  void tradeWithBank()
 	{
 		System.out.println(name + " must choose a resource card to give.");
-		int x = selectAResourceFreely();
+		int x = CatanGame.selectAResourceFreely();
 		if(x != 5 && resources[x] > 3)
 		{
 			System.out.println(name + " must choose a resource card to receive.");
-			int y = selectAResourceFreely();
+			int y = CatanGame.selectAResourceFreely();
 			if(y != 5)
 			{
 				for(int i = 0; i < 4; i++)
@@ -254,7 +192,7 @@ public class Player {
 	}
 	public void draw()
 	{
-		int b = boardLength%2 == 0 ? boardLength+1 : boardLength;
+		int b = CatanBoard.getLength()%2 == 0 ? CatanBoard.getLength()+1 : CatanBoard.getLength();
 		Zen.setColor(color);
 		Zen.drawText(getName(), 75*(number + b + 3), 100);
 		for(int i = 0; i < 5; i++)
@@ -304,7 +242,6 @@ public class Player {
 	public void setRoad(int r)
 	{
 		longRoad = r;
-		System.out.println(getName() + "'s longest road is " + r);
 	}
 	public void longestRoad(boolean b)
 	{

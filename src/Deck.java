@@ -2,15 +2,14 @@ import java.util.*;
 public class Deck {
 	private ArrayList<Card> deck = new ArrayList<Card>();
 	private int[] remaining = new int[]{20,2,2,2,4};
-	public Deck(CatanGame what)
+	public Deck()
 	{
-		int i = 0;
 		while(totalRemaining() > 0)
 		{
 			int x = -1;
 			while(x < 0 || x > 4 || remaining[x] == 0)
 				x = (int)(Math.random() *5);
-			deck.add(new Card(x, what));
+			deck.add(new Card(x));
 			remaining[x]--;
 		}
 		

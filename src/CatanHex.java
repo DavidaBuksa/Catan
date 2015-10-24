@@ -1,4 +1,4 @@
-import java.util.*;
+
 import java.awt.Color;
 public class CatanHex {
 	private int resource;
@@ -19,7 +19,7 @@ public class CatanHex {
 		for(int i = 0; i < 6; i++)
 		{
 			roads[i] = new Road(position[0],position[1], i);
-			settlements[i] = new Settlement(position[0],position[1], i);
+			settlements[i] = new Settlement(x,y, i);
 		}
 	}
 	public void giveResources()
@@ -34,53 +34,15 @@ public class CatanHex {
 			}	
 		}
 	}
-	public void draw(int x, int y, int yDiff)
+	public void draw()
 	{
-		x++;
-		Zen.setColor(roads[0].getColor());
-		Zen.drawLine(75*x,		yDiff*44 + 88*y,		75*x+50,	yDiff*44+ 88*y);
-		Zen.setColor(roads[1].getColor());
-		Zen.drawLine(75*x+50,	yDiff*44 + 88*y,		75*x+75,	yDiff*44 + 44 + 88*y);
-		Zen.setColor(roads[2].getColor());
-		Zen.drawLine(75*x+75,	yDiff*44 + 44 + 88*y,	75*x+50,	yDiff*44 + 88 + 88*y);
-		Zen.setColor(roads[3].getColor());
-		Zen.drawLine(75*x+50,	yDiff*44 + 88 + 88*y,	75*x,		yDiff*44 + 88 + 88*y);
-		Zen.setColor(roads[4].getColor());
-		Zen.drawLine(75*x,		yDiff*44 + 88 + 88*y,	75*x-25,	yDiff*44 + 44 + 88*y);
-		Zen.setColor(roads[5].getColor());
-		Zen.drawLine(75*x-25,	yDiff*44 + 44 + 88*y,	75*x,		yDiff*44 + 88*y);
-	
-		
-		Zen.setColor(settlements[0].getColor());
-		if(settlements[0].isCity())
-			Zen.fillRect(75*x-6,	yDiff*44 + 88*y-6, 		15, 15);
-		else
-			Zen.fillOval(75*x-6,	yDiff*44 + 88*y-6, 		15, 15);
-		Zen.setColor(settlements[1].getColor());
-		if(settlements[1].isCity())
-			Zen.fillRect(75*x+50-6,	yDiff*44 + 88*y-6,		15, 15);
-		else
-			Zen.fillOval(75*x+50-6,	yDiff*44 + 88*y-6,		15, 15);
-		Zen.setColor(settlements[2].getColor());
-		if(settlements[2].isCity())
-			Zen.fillRect(75*x+75-6,	yDiff*44 + 44 + 88*y-6,	15, 15);
-		else
-			Zen.fillOval(75*x+75-6,	yDiff*44 + 44 + 88*y-6,	15, 15);
-		Zen.setColor(settlements[3].getColor());
-		if(settlements[3].isCity())
-			Zen.fillRect(75*x+50-6,	yDiff*44 + 88 + 88*y-6,	15, 15);
-		else
-			Zen.fillOval(75*x+50-6,	yDiff*44 + 88 + 88*y-6,	15, 15);
-		Zen.setColor(settlements[4].getColor());
-		if(settlements[4].isCity())
-			Zen.fillRect(75*x-6,	yDiff*44 + 88 + 88*y-6,	15, 15);
-		else
-			Zen.fillOval(75*x-6,	yDiff*44 + 88 + 88*y-6,	15, 15);
-		Zen.setColor(settlements[5].getColor());
-		if(settlements[5].isCity())
-			Zen.fillRect(75*x-25-6,	yDiff*44 + 44 + 88*y-6,	15, 15);
-		else
-			Zen.fillOval(75*x-25-6,	yDiff*44 + 44 + 88*y-6,	15, 15);
+		int x = position[0] + 1;
+		int y = position[1];
+		int yDiff = CatanBoard.getLength((CatanBoard.getLength())/2) - CatanBoard.getLength(position[0]);
+		for(Road r: roads)
+			r.draw();
+		for(Settlement s: settlements)
+			s.draw();
 		Zen.setColor(color);
 		Zen.drawText(toString(resource),75*x + 5, yDiff*44+88*y+35);
 		Zen.drawText(number + "", 75*x + 20, yDiff*44+88*y + 55);

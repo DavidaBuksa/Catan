@@ -1,13 +1,13 @@
 import java.util.*;
 import java.awt.Color;
 public class CatanBoard {
-	CatanHex[][] tiles;
-	CatanHex robberLocation;
-	public CatanBoard(int size) //Determines the board size and makes the tiles in that class
+	public static CatanHex[][] tiles;
+	public static CatanHex robberLocation;
+	public static void initialize(int size) //Determines the board size and makes the tiles in that class
 	{	if(size%2 == 0)
-		tiles = new CatanHex[size+1][];
-	else
-		tiles = new CatanHex[size][];
+			tiles = new CatanHex[size+1][];
+		else
+			tiles = new CatanHex[size][];
 		for(int i = 0; i < tiles.length; i++)
 		{
 			tiles[i] = new CatanHex[size-Math.abs(size/2-i)];
@@ -18,16 +18,16 @@ public class CatanBoard {
 		}
 		
 	}
-	public void draw()
+	public static void drawInit()
 	{
 		for(int i = 0; i < tiles.length; i++)
 		{
 			for(int j = 0; j < tiles[i].length; j++)
-				tiles[i][j].draw(i,j, tiles[tiles.length/2].length - tiles[i].length);	
+				tiles[i][j].draw();	
 		}
 		robberLocation.drawRobber(Color.white, tiles[tiles.length/2].length - tiles[robberLocation.getPosition()[0]].length);
 	}
-	public void giveResources(int x)
+	public static void giveResources(int x)
 	{
 		for(int i = 0; i < tiles.length; i++)
 		{
@@ -38,7 +38,7 @@ public class CatanBoard {
 			}
 		}
 	}
-	public boolean buildSettlement(Player p)
+	public static boolean buildSettlement(Player p)
 	{
 		Zen.setColor(Color.white);
 		Zen.drawText("cancel", 300, getLength()*88+50);
@@ -92,10 +92,9 @@ public class CatanBoard {
 		}
 		Zen.setColor(Color.black);
 		Zen.drawText("cancel", 300, getLength()*88+50);
-		draw();
 		return true;
 	}
-	public boolean buildRoad(Player p)
+	public static boolean buildRoad(Player p)
 	{
 		Zen.setColor(Color.white);
 		Zen.drawText("cancel", 300, getLength()*88+50);
@@ -129,10 +128,9 @@ public class CatanBoard {
 		}
 		Zen.setColor(Color.black);
 		Zen.drawText("cancel", 300, getLength()*88+50);
-		draw();
 		return true;
 	}
-	public boolean buildCity(Player p)
+	public static boolean buildCity(Player p)
 	{
 		Zen.setColor(Color.white);
 		Zen.drawText("cancel", 300, getLength()*88+50);
@@ -172,10 +170,9 @@ public class CatanBoard {
 		}
 		Zen.setColor(Color.black);
 		Zen.drawText("cancel", 300, getLength()*88+50);
-		draw();
 		return true;
 	}
-	public ArrayList<Player> moveRobber(Player p)
+	public static ArrayList<Player> moveRobber(Player p)
 	{
 		robberLocation.drawRobber(Color.black, tiles[tiles.length/2].length - tiles[robberLocation.getPosition()[0]].length);
 		System.out.println(p.getName() + " must move the robber.");
@@ -193,7 +190,7 @@ public class CatanBoard {
 		}
 		return ans;
 	}
-	public CatanHex selectAHex(Player p)
+	public static CatanHex selectAHex(Player p)
 	{
 		int x = 0;
 		int y = 0;
@@ -206,7 +203,7 @@ public class CatanBoard {
 		}while(getHexLocation(x,y) == null);
 		return tiles[getHexLocation(x,y)[0]][getHexLocation(x,y)[1]];
 	}
-	public int[] getHexLocation(int x, int y)
+	public static int[] getHexLocation(int x, int y)
 	{
 		int column = 0;
 		int row = 0;
@@ -227,7 +224,7 @@ public class CatanBoard {
 		return ans;
 		
 	}
-	public void buildInitialSettlement(Player p)
+	public static void buildInitialSettlement(Player p)
 	{
 		int x = 0;
 		int y = 0;
@@ -267,10 +264,9 @@ public class CatanBoard {
 			tiles[loc4[0]][loc4[1]].getSettlement((loc4[2]+1)%6).setOccupied();
 			tiles[loc4[0]][loc4[1]].getSettlement((loc4[2]+5)%6).setOccupied();
 		}
-		draw();
 		buildInitialRoad(p, x, y);
 	}
-	public int[] getSettlementLocation(int x, int y)
+	public static int[] getSettlementLocation(int x, int y)
 	{
 		int column = 0;
 		int row = 0;
@@ -302,7 +298,7 @@ public class CatanBoard {
 			return null;
 		return new int[]{column,row,set};
 	}
-	public Settlement getSettlement(int[] loc)
+	public static Settlement getSettlement(int[] loc)
 	{
 		if(loc[0] >= 0 && loc[0] < tiles.length && loc[1] >= 0 && loc[1] < tiles[loc[0]].length)
 			return tiles[loc[0]][loc[1]].getSettlement(loc[2]);
@@ -310,7 +306,7 @@ public class CatanBoard {
 			return null;
 	}
 
-	public Settlement getSettlement2(int[] x)
+	public static Settlement getSettlement2(int[] x)
 	{
 		if(x[2] == 0)
 		{
@@ -326,7 +322,7 @@ public class CatanBoard {
 		}
 			return null;
 	}
-	public Settlement getSettlement4(int[] loc)
+	public static Settlement getSettlement4(int[] loc)
 	{
 		if(loc[2] == 0)
 		{
@@ -342,7 +338,7 @@ public class CatanBoard {
 		}
 		return null;
 	}
-	public void buildInitialRoad(Player p, int x, int y)
+	public static void buildInitialRoad(Player p, int x, int y)
 	{
 		int c = 0;
 		int r = 0;
@@ -364,9 +360,8 @@ public class CatanBoard {
 		{
 			getRoad3(getRoadLocation(c,r)).setOwner(p);
 		}
-		draw();
 	}
-	public int[] getRoadLocation(int x, int y)
+	public static int[] getRoadLocation(int x, int y)
 	{
 		int column = 0;
 		int row = 0;
@@ -399,13 +394,13 @@ public class CatanBoard {
 		}
 		return new int[]{column,row,set};
 	}
-	public Road getRoad(int[] loc)
+	public static Road getRoad(int[] loc)
 	{
 		if(loc[0] >= 0 && loc[0] < tiles.length && loc[1] >= 0 && loc[1] < tiles[loc[0]].length)
 			return tiles[loc[0]][loc[1]].getRoad(loc[2]);
 		return null;
 	}
-	public Road getRoad3(int[] loc)
+	public static Road getRoad3(int[] loc)
 	{
 		if(loc[2] == 0)
 		{
@@ -433,7 +428,7 @@ public class CatanBoard {
 			
 		return null;
 	}
-	public boolean isAdjacentInitial(int[] road, Player p)
+	public static boolean isAdjacentInitial(int[] road, Player p)
 	{
 		if(getRoad(road) != null)
 	  		{
@@ -487,7 +482,7 @@ public class CatanBoard {
 		 
 		return false;
 	}
-	public boolean isAdjacentSettle(Settlement s, Player p)
+	public static boolean isAdjacentSettle(Settlement s, Player p)
 	{
 		if(tiles[s.getPosition()[0]][s.getPosition()[1]].getRoad(s.getPosition()[2]).getOwner() == p)
 			return true;
@@ -495,7 +490,7 @@ public class CatanBoard {
 			return true;
 		return false;
 	}
-	public boolean isAdjacentRoad(Road r, Player p)
+	public static boolean isAdjacentRoad(Road r, Player p)
 	{
 		if(tiles[r.getPosition()[0]][r.getPosition()[1]].getRoad((r.getPosition()[2]+1)%6).getOwner() == p)
 			return true;
@@ -503,7 +498,7 @@ public class CatanBoard {
 			return true;
 		return false;
 	}
-	public int longRoad(Player p)
+	public static int longRoad(Player p)
 	{
 		int max = 0;
 		for(int i = 0; i < tiles.length; i++)
@@ -512,14 +507,19 @@ public class CatanBoard {
 			{
 				for(int k = 0; k < 6; k++)
 				{
-					if(longestRoad(tiles[i][j].getRoad((k+1)%6), tiles[i][j].getRoad(k), 0, p, new ArrayList<Road>()) > max)
-						max = longestRoad(tiles[i][j].getRoad((k+1)%6), tiles[i][j].getRoad(k), 0, p, new ArrayList<Road>());
+					if(tiles[i][j].getRoad(k).getOwner() == p)
+					{
+					int x = 0;
+					x = longestRoad(tiles[i][j].getRoad((k+1)%6), tiles[i][j].getRoad(k), 1, p, new ArrayList<Road>());
+					if(x > max)
+						max = x;
+					}
 				}
 			}
 		}
-		return max;
+		return max; 
 	}
-	public int longestRoad(Road r0, Road r1, int count, Player p, ArrayList<Road> arr)
+	public static int longestRoad(Road r0, Road r1, int count, Player p, ArrayList<Road> arr)
 	{
 		int x1 = count;
 		int x2 = count;
@@ -529,7 +529,7 @@ public class CatanBoard {
 			return count;
 		arr.add(r1);
 		arr.add(r2);
-		if(r0.getPosition()[2] > r1.getPosition()[2] || r0.getPosition()[2] == 0 && r1.getPosition()[2] == 5)
+		if(r0.getPosition()[2] == (r1.getPosition()[2]+1)%6)
 		{	
 			if(tiles[r1.getPosition()[0]][r1.getPosition()[1]].getRoad((r1.getPosition()[2]+5)%6).getOwner() == p)
 				x1 = longestRoad(r1, tiles[r1.getPosition()[0]][r1.getPosition()[1]].getRoad((r1.getPosition()[2]+5)%6), count+1, p, arr);
@@ -537,7 +537,7 @@ public class CatanBoard {
 			if(r2 != null && tiles[r2.getPosition()[0]][r2.getPosition()[1]].getRoad((r2.getPosition()[2]+1)%6).getOwner() == p)
 				x2 = longestRoad(r2, tiles[r2.getPosition()[0]][r2.getPosition()[1]].getRoad((r2.getPosition()[2]+1)%6), count+1, p, arr);
 		}
-		else if(r0.getPosition()[2] < r1.getPosition()[2]|| r1.getPosition()[2] == 0 && r0.getPosition()[2] == 5)
+		else if(r0.getPosition()[2] == (r1.getPosition()[2]-1)%6)
 		{	
 			if(tiles[r1.getPosition()[0]][r1.getPosition()[1]].getRoad((r1.getPosition()[2]+1)%6).getOwner() == p)
 				x1 = longestRoad(r1, tiles[r1.getPosition()[0]][r1.getPosition()[1]].getRoad((r1.getPosition()[2]+1)%6), count+1, p, arr);
@@ -548,8 +548,16 @@ public class CatanBoard {
 		return x1 > x2 ? x1 : x2;
 			
 	}
-	public int getLength()
+	public static int getLength()
 	{
 		return tiles.length;
+	}
+	public static int getLength(int i)
+	{
+		return tiles[i].length;
+	}
+	public static CatanHex[][] getBoard()
+	{
+		return tiles;
 	}
 }

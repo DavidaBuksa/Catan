@@ -9,8 +9,8 @@ public class CatanDriver {
 		String newGame = "true";
 		while(newGame.equalsIgnoreCase("true"))
 		{
-			CatanGame game = new CatanGame();
-			game.play();
+			CatanGame.init();
+			CatanGame.play();
 			
 			System.out.println("You would like to play again: True or False?");
 			do

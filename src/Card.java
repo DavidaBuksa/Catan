@@ -1,13 +1,11 @@
-import java.util.*;
+
 public class Card {
 	private String name;
 	private int card;
-	private CatanGame game;
-	public Card(int x, CatanGame g)
+	public Card(int x)
 	{
 		name = name(x);
 		card = x;
-		game = g;
 	}
 	public String name(int x)
 	{
@@ -42,14 +40,14 @@ public class Card {
 		if(card == 0)
 		{
 			p.addKnight();
-			game.stealFrom(p, game.getBoard().moveRobber(p));
+			CatanGame.stealFrom(p, CatanBoard.moveRobber(p));
 			if(p.getKnights() > 3)
-				game.checkKnights();
+				CatanGame.checkKnights();
 		}
 		if(card == 1)
 		{
-			int x = p.selectAResource();
-			for(Player other: game.getPlayers())
+			int x = CatanGame.selectAResource();
+			for(Player other: CatanGame.getPlayers())
 			{
 				while(other.getResources()[x] > 0)
 				{
@@ -61,17 +59,17 @@ public class Card {
 		}
 		if(card == 2)
 		{
-			int x = p.selectAResource();
+			int x = CatanGame.selectAResource();
 			p.addResource(x);
-			x = p.selectAResource();
+			x = CatanGame.selectAResource();
 			p.addResource(x);
 		}
 		if(card == 3)
 		{
-			game.getBoard().buildRoad(p);
-			game.getBoard().buildRoad(p);
-			p.setRoad(game.longRoad(p));
-			game.longestRoad();
+			CatanBoard.buildRoad(p);
+			CatanBoard.buildRoad(p);
+			p.setRoad(CatanGame.longRoad(p));
+			CatanGame.longestRoad();
 		}
 		if(card == 4)
 		{
