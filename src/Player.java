@@ -1,10 +1,12 @@
-import java.util.*;
+import java.util.Scanner;
+import java.util.ArrayList;
 import java.awt.Color;
 public class Player {
 	public static Scanner in = new Scanner(System.in);
 	private Color color;
 	private int[] resources = new int[5];
 	private int[] oldResources = new int[6];
+	private boolean[] ports = new boolean[6];
 	private int number;
 	private int knights = 0;
 	private boolean hasKnights = false;
@@ -21,7 +23,9 @@ public class Player {
 		for(int i = 1; i < 5; i++)
 		{
 			resources[i] = 0;
+			ports[i] = false;
 		}
+		ports[5] = false;
 		vp = 2;
 		
 	}
@@ -114,13 +118,14 @@ public class Player {
 	{
 		System.out.println(name + " must choose a resource card to give.");
 		int x = CatanGame.selectAResourceFreely();
-		if(x != 5 && resources[x] > 3)
+		if(x != 5 && (resources[x] > 3 || (ports[x] && resources[x] > 1) || (ports[5] && resources[x] > 2)))
 		{
 			System.out.println(name + " must choose a resource card to receive.");
 			int y = CatanGame.selectAResourceFreely();
 			if(y != 5)
 			{
-				for(int i = 0; i < 4; i++)
+				int lose = ports[x] ? 2 : ports[6] ? 3:4;
+				for(int i = 0; i < lose; i++)
 					loseResource(x);
 				addResource(y);
 			}
@@ -264,6 +269,13 @@ public class Player {
 	public void addVP()
 	{
 		vp++;
+	}
+	public void addPort(int x)
+	{
+		if(x > 0 && x < 7)
+		{
+			ports[x-1] = true;
+		}
 	}
 	
 	

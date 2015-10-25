@@ -6,6 +6,7 @@ public class Settlement {
 	private boolean isOccupied;
 	private int[] position;
 	private boolean city;
+	private int port; //0...7
 	public Settlement(int x, int y, int s)
 	{
 		owner = null;
@@ -13,6 +14,7 @@ public class Settlement {
 		isOccupied = false;
 		position = new int[]{x,y,s};
 		city= false;
+		port = 0;
 	}
 	public Player getOwner()
 	{
@@ -37,6 +39,7 @@ public class Settlement {
 		color = p.getColor();
 		isOccupied = true;
 		draw();
+		p.addPort(port);
 	}
 	public void setOccupied()
 	{
@@ -53,7 +56,7 @@ public class Settlement {
 	public void draw()
 	{
 		int x = position[0] + 1;
-		int y = position[1];
+		int y = position[1] + 1;
 		int yDiff = CatanBoard.getLength((CatanBoard.getLength())/2) - CatanBoard.getLength(position[0]);
 		Zen.setColor(color);
 		if(position[2] == 0){
@@ -86,6 +89,14 @@ public class Settlement {
 			Zen.fillRect(75*x-25-6,	yDiff*44 + 44 + 88*y-6,	15, 15);
 		else
 			Zen.fillOval(75*x-25-6,	yDiff*44 + 44 + 88*y-6,	15, 15);}
+	}
+	public int getPort()
+	{
+		return port;
+	}
+	public void setPort(int x)
+	{
+		port = x+1;
 	}
 
 }

@@ -1,4 +1,4 @@
-import java.util.*;
+import java.util.ArrayList;
 public class Deck {
 	private ArrayList<Card> deck = new ArrayList<Card>();
 	private int[] remaining = new int[]{20,2,2,2,4};
