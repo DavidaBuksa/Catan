@@ -5,7 +5,8 @@ public class CatanBoard {
 	public static CatanHex robberLocation;
 	public static void initialize(int size) //Determines the board size and makes the tiles in that class
 	{	
-		int[] avail = size < 7 ? new int[]{size,size,size,size,size}:new int[]{size+2,size+2,size+2,size+2,size+2};
+		int total = 0;
+		
 		if(size%2 == 0)
 			tiles = new CatanHex[size+1][];
 		else
@@ -13,10 +14,15 @@ public class CatanBoard {
 		for(int i = 0; i < tiles.length; i++)
 		{
 			tiles[i] = new CatanHex[size-Math.abs(size/2-i)];
+			total += tiles[i].length;
+			
+		}
+		int[] avail = new int[]{total/5+2,total/5+2,total/5+2,total/5+2,total/5+2};
+		for(int i = 0; i < tiles.length; i++)
+		{
 			for(int j = 0; j < tiles[i].length; j++)
 				tiles[i][j] = new CatanHex(i, j, avail);
 			robberLocation = tiles[0][0];
-			
 		}
 		
 	}
@@ -39,155 +45,99 @@ public class CatanBoard {
 		int port = 0;
 		int x,y = 0;
 		int randy = 15;
-		int dudder = 6;
+		int dudder = 5;
 		for(x = 0; x < tiles.length; x++)
 			for(int s = 0; s < 6; s++){
 				int k = (s+4)%6;
-				if((k < 3 && getRoad3(new int[]{x,y,k}) == null || k > 2 && getRoad6(new int[]{x,y,k}) == null))
-				{
+				if((k < 3 && getRoad3(new int[]{x,y,k}) == null || k > 2 && getRoad6(new int[]{x,y,k}) == null)){
 					dud = dud > 0 ? dud-1:dud;
-					if(tiles[x][y].getRoad(k).getPort() != 0)
-					{
-						if(dud == 0)
-						{
+					if(tiles[x][y].getRoad(k).getPort() != 0){
+						if(dud == 0){
 							dud = dudder;
 							if(count == 0)
-								return;
-						}
-						else
-						{
+								return;}
+						else{
 							avail[tiles[x][y].getRoad(k).getPort()-1]++;
 							tiles[x][y].erasePort(k);
-							count++;
-						}
-								
-					}
-						
-					if(dud == 0 && Math.random()*randy < 1)
-					{
+							count++;}}	
+					if(dud == 0 && Math.random()*randy < 1){
 						do{
 							port = (int)(Math.random()*6);
 						}while(avail[port] == 0);
 						tiles[x][y].drawPort(k, port);
 						avail[port]--;
 						count--;
-						dud = dudder;
-					}
-				}	
-			}
-		
+						dud = dudder;}}	}
 		x = tiles.length - 1 ;
-		for( y = 1; y < tiles[x].length; y++)
+		for( y = 1; y < tiles[x].length-1; y++)
 			for(int s = 0; s < 6; s++){
 				int k = (s+1)%6;
-				if((k < 3 && getRoad3(new int[]{x,y,k}) == null || k > 2 && getRoad6(new int[]{x,y,k}) == null))
-				{
+				if((k < 3 && getRoad3(new int[]{x,y,k}) == null || k > 2 && getRoad6(new int[]{x,y,k}) == null)){
 					dud = dud > 0 ? dud-1:dud;
-					if(tiles[x][y].getRoad(k).getPort() != 0)
-					{
-						if(dud == 0)
-						{
+					if(tiles[x][y].getRoad(k).getPort() != 0){
+						if(dud == 0){
 							dud = dudder;
 							if(count == 0)
-								return;
-						}
-						else
-						{
+								return;}
+						else{
 							avail[tiles[x][y].getRoad(k).getPort()-1]++;
 							tiles[x][y].erasePort(k);
-							count++;
-						}
-								
-					}
-						
-					if(dud == 0 && Math.random()*randy < 1)
-					{
+							count++;}}
+					if(dud == 0 && Math.random()*randy < 1){
 						do{
 							port = (int)(Math.random()*6);
 						}while(avail[port] == 0);
 						tiles[x][y].drawPort(k, port);
 						avail[port]--;
 						count--;
-						dud = dudder;
-					}
-				}	
-			}
-	
+						dud = dudder;}}}
 		for(x = tiles.length-1; x > 0; x--){
 			y = tiles[x].length-1;
 			for(int s = 0; s < 6; s++){
 				int k = (s+2)%6;
-				if((k < 3 && getRoad3(new int[]{x,y,k}) == null || k > 2 && getRoad6(new int[]{x,y,k}) == null))
-				{
+				if((k < 3 && getRoad3(new int[]{x,y,k}) == null || k > 2 && getRoad6(new int[]{x,y,k}) == null)){
 					dud = dud > 0 ? dud-1:dud;
-					if(tiles[x][y].getRoad(k).getPort() != 0)
-					{
-						if(dud == 0)
-						{
+					if(tiles[x][y].getRoad(k).getPort() != 0){
+						if(dud == 0){
 							dud = dudder;
 							if(count == 0)
-								return;
-						}
-						else
-						{
+								return;}
+						else{
 							avail[tiles[x][y].getRoad(k).getPort()-1]++;
 							tiles[x][y].erasePort(k);
-							count++;
-						}
-								
-					}
-						
-					if(dud == 0 && Math.random()*randy < 1)
-					{
+							count++;}}
+					if(dud == 0 && Math.random()*randy < 1){
 						do{
 							port = (int)(Math.random()*6);
 						}while(avail[port] == 0);
 						tiles[x][y].drawPort(k, port);
 						avail[port]--;
 						count--;
-						dud = dudder;
-					}
-				}	
-			}
-		}	
-
+						dud = dudder;}}}}	
 
 		x = 0;
-		for(y = tiles[x].length-1; y > 0; y--)
+		for(y = tiles[x].length-2; y > 0; y--)
 			for(int s = 0; s < 6; s++){
 				int k = (s+4)%6;
-				if((k < 3 && getRoad3(new int[]{x,y,k}) == null || k > 2 && getRoad6(new int[]{x,y,k}) == null))
-				{
+				if((k < 3 && getRoad3(new int[]{x,y,k}) == null || k > 2 && getRoad6(new int[]{x,y,k}) == null)){
 					dud = dud > 0 ? dud-1:dud;
-					if(tiles[x][y].getRoad(k).getPort() != 0)
-					{
-						if(dud == 0)
-						{
+					if(tiles[x][y].getRoad(k).getPort() != 0){
+						if(dud == 0){
 							dud = dudder;
 							if(count == 0)
-								return;
-						}
-						else
-						{
+								return;}
+						else{
 							avail[tiles[x][y].getRoad(k).getPort()-1]++;
 							tiles[x][y].erasePort(k);
-							count++;
-						}
-								
-					}
-						
-					if(dud == 0 && Math.random()*randy < 1)
-					{
+							count++;}}
+					if(dud == 0 && Math.random()*randy < 1){
 						do{
 							port = (int)(Math.random()*6);
 						}while(avail[port] == 0);
 						tiles[x][y].drawPort(k, port);
 						avail[port]--;
 						count--;
-						dud = dudder;
-					}
-				}	
-			}
+						dud = dudder;}}}
 		initPorts(avail,count,dud);
 
 	}
